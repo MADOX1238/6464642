@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ar"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Spherely</title> 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4267B2; /* لون شبيه بلون فيسبوك */
+      color: white;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      margin: 20px auto;
+      max-width: 400px;
+      text-align: left;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4267B2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #365899;
+    }
+    .signup-link {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .signup-link a {
+      color: #4267B2;
+      text-decoration: none;
+    }
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+  </style> 
+ </head> 
+ <body> 
+  <header>
+    مرحبًا بكم في تطبيق Spherely 
+  </header> 
+  <div class="container"> 
+   <h2>تسجيل الدخول</h2> 
+   <form id="loginForm"> 
+    <input type="text" id="loginUser" class="input-field" placeholder="اسم المستخدم" required> 
+    <input type="password" id="loginPassword" class="input-field" placeholder="كلمة السر" required> 
+    <button type="submit" class="button">تسجيل دخول</button> 
+   </form> 
+   <div class="signup-link"> 
+    <p>ليس لديك حساب؟ <a href="#">إنشاء حساب جديد</a></p> 
+   </div> 
+  </div> 
+
+  <script type="module">
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+    const database = getDatabase();
+
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const userName = document.getElementById('loginUser').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const userRef = ref(database, 'users/' + userName);
+
+      get(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          if (userData.password === password) {
+            window.location.href = "profile.html"; // الانتقال إلى صفحة البيانات الشخصية
+          } else {
+            alert('كلمة السر غير صحيحة');
+          }
+        } else {
+          alert('لا يوجد مستخدم بهذا الاسم');
+        }
+      }).catch((error) => {
+        console.error("Error: ", error);
+      });
+    });
+  </script>
+ 
+</body></html>

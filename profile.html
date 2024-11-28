@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>الملف الشخصي</title> 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4267B2; /* لون شبيه بلون فيسبوك */
+      color: white;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      margin: 20px auto;
+      max-width: 400px;
+      text-align: left;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .profile-info {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style> 
+ </head> 
+ <body> 
+  <header>
+    ملفك الشخصي 
+  </header> 
+  <div class="container"> 
+   <h2>البيانات الشخصية</h2> 
+   <div class="profile-info" id="profileInfo">
+     <!-- سيتم إضافة البيانات هنا بواسطة JavaScript -->
+   </div>
+  </div> 
+
+  <script type="module">
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+    const database = getDatabase();
+
+    // يتم الحصول على البيانات من Firebase بناءً على اسم المستخدم
+    const userName = 'اسم_المستخدم'; // يجب تغييرها بناءً على الجلسة أو البيانات المدخلة
+    const userRef = ref(database, 'users/' + userName);
+
+    get(userRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        document.getElementById('profileInfo').innerHTML = `
+          <p>الاسم الأول: ${userData.firstName}</p>
+          <p>اسم العائلة: ${userData.lastName}</p>
+          <p>الجنس: ${userData.gender}</p>
+        `;
+      } else {
+        alert('لا يوجد مستخدم بهذا الاسم');
+      }
+    }).catch((error) => {
+      console.error("Error: ", error);
+    });
+  </script>
+ 
+</body></html>

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ar"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>إنشاء حساب جديد - Spherely</title> 
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4267B2; /* لون شبيه بلون فيسبوك */
+            color: white;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: left;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4267B2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #365899;
+        }
+        .gender-choice {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .gender-choice input {
+            display: none;
+        }
+        .gender-choice label {
+            position: relative;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .gender-choice label:before {
+            content: "";
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .gender-choice input:checked + label:before {
+            background-color: green;
+        }
+        .gender-choice label span {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <header>
+    مرحبًا بكم في تطبيق Spherely 
+  </header> 
+  <div class="container"> 
+   <h2>إنشاء حساب جديد</h2> 
+   <form id="signupForm"> 
+    <input type="text" id="firstName" class="input-field" placeholder="الاسم الأول" required> 
+    <input type="text" id="lastName" class="input-field" placeholder="اسم العائلة" required> 
+    <input type="password" id="password" class="input-field" placeholder="كلمة السر" required> <!-- حقل كلمة السر الجديد --> 
+    <div class="gender-choice"> 
+     <div> 
+      <input type="radio" id="male" name="gender" value="ذكر" required> <label for="male"><span>ذكر</span></label> 
+     </div> 
+     <div> 
+      <input type="radio" id="female" name="gender" value="أنثى" required> <label for="female"><span>أنثى</span></label> 
+     </div> 
+    </div>
+    <button type="submit" class="button">تسجيل</button> 
+   </form> 
+  </div> 
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCnHSUo_Vu53NidFWYlQ74_CyOyfVW_BqQ",
+      authDomain: "alaah-8d503.firebaseapp.com",
+      databaseURL: "https://alaah-8d503-default-rtdb.firebaseio.com",
+      projectId: "alaah-8d503",
+      storageBucket: "alaah-8d503.firebasestorage.app",
+      messagingSenderId: "365922482892",
+      appId: "1:365922482892:web:a843fbb3594d200c67e069",
+      measurementId: "G-D4TPJW4RT8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const signupForm = document.getElementById('signupForm');
+    signupForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const password = document.getElementById('password').value;
+      const gender = document.querySelector('input[name="gender"]:checked').value;
+
+      const userId = firstName + lastName; // يمكن استخدام اسم المستخدم لتحديد هوية المستخدم في قاعدة البيانات
+
+      set(ref(database, 'users/' + userId), {
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+        gender: gender
+      }).then(() => {
+        alert('تم التسجيل بنجاح');
+      }).catch((error) => {
+        console.error("Error: ", error);
+      });
+    });
+  </script>
+ 
+</body></html>
